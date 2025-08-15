@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export function DokumenPersyaratan({ setRefreshKey }: { setRefreshKey: any }) {
-  const [data, setData] = useState({});
+  const [data, setData] = useState<any>({});
   useEffect(() => {
     const token = localStorage.getItem("token");
     const pendaftaranId = localStorage.getItem("pendaftaranId");
