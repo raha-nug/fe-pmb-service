@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { NAV_DATA } from "./data";
+import { NAV_DATA, NAV_ADMIN } from "./data";
 import { ArrowLeftIcon, ChevronUp } from "./icons";
 import { MenuItem } from "./menu-item";
 import { useSidebarContext } from "./sidebar-context";
@@ -14,6 +14,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [navData, setNavData] = useState(NAV_DATA);
 
   const toggleExpanded = (title: string) => {
     setExpandedItems((prev) => (prev.includes(title) ? [] : [title]));
@@ -26,10 +27,16 @@ export function Sidebar() {
 
   useEffect(() => {
     // Keep collapsible open, when it's subpage is active
-    NAV_DATA.some((section) => {
+
+    const user = JSON.parse(localStorage.getItem("user") as string);
+    const role = user.role;
+    const currentNav = role === "ADMIN" ? NAV_ADMIN : NAV_DATA;
+    setNavData(currentNav);
+
+    currentNav.some((section) => {
       return section.items.some((item) => {
         return item.items.some((subItem) => {
-          if (subItem.url === pathname) {
+          if (pathname.startsWith(subItem.url)) {
             if (!expandedItems.includes(item.title)) {
               toggleExpanded(item.title);
             }
@@ -87,7 +94,7 @@ export function Sidebar() {
 
           {/* Navigation */}
           <div className="custom-scrollbar mt-6 flex-1 overflow-y-auto pr-3 min-[850px]:mt-10">
-            {NAV_DATA.map((section) => (
+            {navData.map((section) => (
               <div key={section.label} className="mb-6">
                 <h2 className="mb-5 text-sm font-medium text-dark-4 dark:text-dark-6">
                   {section.label}
@@ -100,8 +107,8 @@ export function Sidebar() {
                         {item.items.length ? (
                           <div>
                             <MenuItem
-                              isActive={item.items.some(
-                                ({ url }) => url === pathname,
+                              isActive={item.items.some(({ url }) =>
+                                pathname.startsWith(url),
                               )}
                               onClick={() => toggleExpanded(item.title)}
                             >
@@ -132,7 +139,9 @@ export function Sidebar() {
                                     <MenuItem
                                       as="link"
                                       href={subItem.url}
-                                      isActive={pathname === subItem.url}
+                                      isActive={pathname.startsWith(
+                                        subItem.url,
+                                      )}
                                     >
                                       <span>{subItem.title}</span>
                                     </MenuItem>

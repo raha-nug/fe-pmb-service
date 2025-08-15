@@ -53,8 +53,8 @@ export function Button({
       className={buttonVariants({ variant, shape, size, className })}
       {...props}
     >
-      {icon && <span>{icon}</span>}
       {label}
+      {icon && <span>{icon}</span>}
     </button>
   );
 }

@@ -1,18 +1,16 @@
 "use client";
+import Swal from "sweetalert2";
 import { EmailIcon, PasswordIcon } from "@/assets/icons";
-import Link from "next/link";
 import React, { useState } from "react";
 import InputGroup from "../FormElements/InputGroup";
-import { Checkbox } from "../FormElements/checkbox";
+import { useRouter } from "next/navigation";
 
 export default function SigninWithPassword() {
+  const router = useRouter();
   const [data, setData] = useState({
-    email: process.env.NEXT_PUBLIC_DEMO_USER_MAIL || "",
-    password: process.env.NEXT_PUBLIC_DEMO_USER_PASS || "",
-    remember: false,
+    email: "",
+    password: "",
   });
-
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({
@@ -21,15 +19,62 @@ export default function SigninWithPassword() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // You can remove this code block
-    setLoading(true);
+    Swal.fire({
+      title: "Loading...",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_USER_SERVICE_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+          credentials: "include",
+        },
+      );
+
+      const auth = await res.json();
+      if (!res.ok) throw new Error(auth.message || "Gagal login");
+      await Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Anda akan diarahkan ke dashboard.",
+        timer: 2000, // auto close setelah 2 detik
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      if (res.ok) {
+        localStorage.setItem("user", JSON.stringify(auth.data));
+        localStorage.setItem("token", auth.token);
+        const tomorrow = Date.now() + 24 * 60 * 60 * 1000;
+        localStorage.setItem("expiredAt", tomorrow.toString());
+
+        router.push(
+          `/dashboard/${auth.data.role == "ADMIN" ? "admin" : "calon-mahasiswa"}`,
+        );
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: error.message || "Terjadi kesalahan saat login.",
+      });
+    }
   };
 
   return (
@@ -56,38 +101,12 @@ export default function SigninWithPassword() {
         icon={<PasswordIcon />}
       />
 
-      <div className="mb-6 flex items-center justify-between gap-2 py-2 font-medium">
-        <Checkbox
-          label="Remember me"
-          name="remember"
-          withIcon="check"
-          minimal
-          radius="md"
-          onChange={(e) =>
-            setData({
-              ...data,
-              remember: e.target.checked,
-            })
-          }
-        />
-
-        <Link
-          href="/auth/forgot-password"
-          className="hover:text-primary dark:text-white dark:hover:text-primary"
-        >
-          Forgot Password?
-        </Link>
-      </div>
-
       <div className="mb-4.5">
         <button
           type="submit"
           className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary p-4 font-medium text-white transition hover:bg-opacity-90"
         >
           Sign In
-          {loading && (
-            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-t-transparent dark:border-primary dark:border-t-transparent" />
-          )}
         </button>
       </div>
     </form>

@@ -1,43 +1,29 @@
 import * as logos from "@/assets/logos";
 
-export async function getTopProducts() {
+export async function getDokumenPersyaratan() {
   // Fake delay
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  try {
+    const token = localStorage.getItem("token");
+    const pendaftaranId =
+      localStorage.getItem("pendaftaranId") || "cmdblwz6s0000jj04bgsz0k30";
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_PENDAFTARAN_SERVICE_URL}/api/pendaftaran/${pendaftaranId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
-  return [
-    {
-      image: "/images/product/product-01.png",
-      name: "Apple Watch Series 7",
-      category: "Electronics",
-      price: 296,
-      sold: 22,
-      profit: 45,
-    },
-    {
-      image: "/images/product/product-02.png",
-      name: "Macbook Pro M1",
-      category: "Electronics",
-      price: 546,
-      sold: 12,
-      profit: 125,
-    },
-    {
-      image: "/images/product/product-03.png",
-      name: "Dell Inspiron 15",
-      category: "Electronics",
-      price: 443,
-      sold: 64,
-      profit: 247,
-    },
-    {
-      image: "/images/product/product-04.png",
-      name: "HP Probook 450",
-      category: "Electronics",
-      price: 499,
-      sold: 72,
-      profit: 103,
-    },
-  ];
+    const pendaftaran = await res.json();
+
+    console.log(pendaftaran);
+
+    return pendaftaran;
+  } catch (error: any) {
+    console.log(error.message);
+  }
 }
 
 export async function getInvoiceTableData() {

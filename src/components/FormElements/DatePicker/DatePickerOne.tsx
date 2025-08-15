@@ -4,7 +4,13 @@ import { Calendar } from "@/components/Layouts/sidebar/icons";
 import flatpickr from "flatpickr";
 import { useEffect } from "react";
 
-const DatePickerOne = () => {
+interface DatePickerProps {
+  label?: string;
+  required?: boolean;
+  name?: string;
+}
+
+const DatePickerOne = ({ label, required, name }: DatePickerProps) => {
   useEffect(() => {
     // Init flatpickr
     flatpickr(".form-datepicker", {
@@ -18,13 +24,16 @@ const DatePickerOne = () => {
   return (
     <div>
       <label className="mb-3 block text-body-sm font-medium text-dark dark:text-white">
-        Date picker
+        {label}
+        {required && <span className="ml-1 select-none text-red">*</span>}
       </label>
       <div className="relative">
         <input
           className="form-datepicker w-full rounded-[7px] border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary"
           placeholder="mm/dd/yyyy"
           data-class="flatpickr-right"
+          name={name}
+          required={required}
         />
 
         <div className="pointer-events-none absolute inset-0 left-auto right-5 flex items-center">
