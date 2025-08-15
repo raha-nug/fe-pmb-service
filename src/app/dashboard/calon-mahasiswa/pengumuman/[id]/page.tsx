@@ -16,7 +16,7 @@ interface Pengumuman {
 }
 
 export default function PengumumanPage() {
-  const [data, setData] = useState<Pengumuman[]>([]);
+  const [data, setData] = useState<Pengumuman>();
   const [loading, setLoading] = useState(true);
   const params = useParams();
 
@@ -51,14 +51,16 @@ export default function PengumumanPage() {
         ) : (
           <>
             <h2 className="mb-2 text-lg font-semibold text-gray-800">
-              {data.judul}
+              {data?.judul}
             </h2>
             <p className="mb-3 text-sm text-gray-500">
               Dipublikasikan:{" "}
-              {new Date(data.tanggalPublikasi).toLocaleDateString("id-ID")}
+              {new Date(data?.tanggalPublikasi || "").toLocaleDateString(
+                "id-ID",
+              )}
             </p>
             <p className="whitespace-pre-line text-gray-700">
-              {data.isiKonten}
+              {data?.isiKonten}
             </p>
           </>
         )}
