@@ -219,7 +219,7 @@ export default function DetailPendaftaranPage() {
           label="Validasi Data"
           variant={"primary"}
           shape={"rounded"}
-          onClick={() => handleValidasi}
+          onClick={handleValidasi}
         />
       </ShowcaseSection>
     </div>
