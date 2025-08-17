@@ -60,7 +60,7 @@ export default function SignUp() {
       });
 
       if (res.ok) {
-        router.push(`/dashboard/auth/sign-in`);
+        router.push(`/auth/sign-in`);
       }
     } catch (error: any) {
       await Swal.fire({
