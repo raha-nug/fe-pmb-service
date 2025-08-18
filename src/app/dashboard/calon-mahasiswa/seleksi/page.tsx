@@ -203,7 +203,7 @@ export default function JadwalUjianPage() {
                       variant={"primary"}
                       shape={"rounded"}
                       label="Mulai Ujian"
-                      onClick={() => handleMulaiUjian}
+                      onClick={handleMulaiUjian}
                     />
                   </div>
                 )}
