@@ -132,6 +132,12 @@ export default function ValidasiSesiPage() {
     if (!formValues) return;
 
     try {
+      Swal.fire({
+        title: "Memvalidasi...",
+        didOpen: () => Swal.showLoading(),
+        allowOutsideClick: false,
+      });
+
       const res = await fetch(`${baseUrl}/api/seleksi/hasil-seleksi`, {
         method: "POST",
         headers: {
