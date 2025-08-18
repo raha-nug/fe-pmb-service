@@ -73,7 +73,7 @@ export default function PengerjaanUjianPage() {
       const soal = json.data?.soal;
 
       if (!soal || soal.length === 0) {
-        Swal.fire("Error", "Soal tidak tersedia", "error");
+        Swal.fire("Error", json.message, "error");
         router.push("/dashboard/calon-mahasiswa/seleksi");
         return;
       }
