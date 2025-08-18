@@ -62,6 +62,11 @@ export default function TagihanPage() {
     });
 
     try {
+      Swal.fire({
+        title: "Mengonfirmasi...",
+        didOpen: () => Swal.showLoading(),
+        allowOutsideClick: false,
+      });
       const res = await fetch(
         `${baseUrl}/api/pembayaran/tagihan/${id}/konfirmasi`,
         {
@@ -102,6 +107,11 @@ export default function TagihanPage() {
     if (!alasan) return;
 
     try {
+      Swal.fire({
+        title: "Menolak...",
+        didOpen: () => Swal.showLoading(),
+        allowOutsideClick: false,
+      });
       const res = await fetch(
         `${baseUrl}/api/pembayaran/tagihan/${id}/konfirmasi`,
         {
