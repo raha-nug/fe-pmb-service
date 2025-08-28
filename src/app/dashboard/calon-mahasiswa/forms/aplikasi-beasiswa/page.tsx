@@ -53,7 +53,7 @@ export default function Page() {
         <ShowcaseSection title="Informasi" className="!p-7">
           <p>
             Silahkan mendaftar terlebih dahulu pada{" "}
-            <Link href={"/dashboard/calon-mahasiswa/forms/aplikasi-beasiswa/pengajuan"} className="underline text-blue-400">link berikut</Link>
+            <Link target="blank" href={"https://docs.google.com/forms/d/e/1FAIpQLScb6a193raegUxfELS3KUoUXmCVkyJIqrczIZo3Wu2xGsSShQ/viewform"} className="underline text-blue-400">link berikut</Link>
           </p>
         </ShowcaseSection>
       ) : (
